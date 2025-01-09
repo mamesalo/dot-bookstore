@@ -1,29 +1,24 @@
 import express from "express";
 import { Book } from "../model/bookModel.js";
-import upload from "../middleware/multer.js";
+
 import authMiddleware from "../middleware/authorize.js";
 const router = express.Router();
 // .................Post.....................
-router.post("/", authMiddleware, upload.single("image"), async (req, res) => {
+router.post("/", authMiddleware, async (req, res) => {
   try {
-    console.log("in post");
+    console.log(req.body.hell);
 
     if (!req.body.title || !req.body.author || !req.body.publishYear) {
       return res.status(400).send({
         message: "send all required fields: title, author,publishYear",
       });
     }
-    let imageUrl = null;
-    if (req.file) {
-      imageUrl = `${req.protocol}://${req.get("host")}/uploads/${
-        req.file.filename
-      }`;
-    }
+
     const newBook = {
       title: req.body.title,
       author: req.body.author,
       publishYear: req.body.publishYear,
-      image: imageUrl,
+      image: req.body.image,
       createdBy: req.user.userId,
     };
     console.log(newBook);
